@@ -79,9 +79,10 @@ def lectura_fichero():
     # Muestra resultados
     print("Variables:")
     print(listaVariables)
-    print("Cláusulas:")
+    print("\nCláusulas:")
     for clausula in listaClausulas:
         print(clausula.l1 + " " + clausula.l2 + " " + clausula.l3)
+    print()
     return [listaVariables, listaClausulas]
 
 # Representa un nodo del grafo
@@ -243,6 +244,7 @@ def main():
     grafo_SAT3 = Grafo(res[0], res[1])
     grafo_SAT3.crear_grafo()
     print(grafo_SAT3)
+    print()
     print(grafo_SAT3.to_sat3())
 
 if __name__ == '__main__':

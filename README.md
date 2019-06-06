@@ -1,6 +1,13 @@
 # Mi-primer-intento-de-parsear-con-python
-Parseo de un fichero con Python. El fichero es parte de la entrada de un ejercicio propuesto para la asignatura Modelos Avanzados de Computación - UGR
+
+Implementación de la reducción de 3SAT al problema del coloreado de un grafo con 3 colotes. 
+
+*Ejercicio realizado para la asignatura Modelos Avanzados de Computación - UGR*
+
+*Por: 
+Miguel Lentisco Ballesteros
+Jesús Sánchez de Lechina Tejada*
 
 # Instrucciones de uso
 
-`python3 parser.py entrada_coloreado.txt`
+`python colorearGrafo.py entrada_coloreado.txt`
