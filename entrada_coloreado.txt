@@ -1,0 +1,5 @@
+Variables: x y z
+Clausulas:
+x or y or z
+¬x or y or z
+¬x or y or ¬z
