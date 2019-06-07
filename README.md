@@ -1,4 +1,4 @@
-# M3SAT-to-3Colour-Graph-Reduction
+# 3SAT-to-3Colour-Graph-Reduction
 
 Implementación de la reducción de 3SAT al problema del coloreado de un grafo con 3 colotes. 
 
