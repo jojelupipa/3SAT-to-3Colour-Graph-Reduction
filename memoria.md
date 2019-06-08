@@ -1,15 +1,23 @@
 # Coloreado de grafo con 3 colores NP-Completo
 
+### Miguel Lentisco Ballesteros
+### Jesús Sánchez de Lechina Tejada
+
 ## Demostración NP-Completo
 El problema de colorear un grafo con 3 colores (COLOREAR3) consiste en:
 
 Dado un grafo G y una función $f:G \rightarrow \{C1, C2, C3\}$ que asigna a cada nodo n de G un color de los 3 $\{C1, C2, C3\}$ entonces un grafo es coloreable con 3 colores si:
 - Cada nodo n de G tiene un color asignado
-- Para cada par de nodos conectados $(u,v)$ de G entonces $f(u) \neq f(v)$.
+- Para cada par de nodos conectados $(u,v)$ de G entonces $f(u) \neq f(v)$ (tienen colores distintos).
 
 Para ver que es NP-Completo veremos que está en NP y después haremos una reducción del problema NP-Completo SAT3 a COLOREAR3.
 
 ### NP
+Vemos que está en NP viendo que podemos hacer una MTND que elija una forma de colorear el grafo de manera no determinista y compruebe si el grafo resultante cumple las condiciones (que cada par de nodos conectados tengan colores distintos).
+
+La comprobación se puede hacer con un algoritmo simple que por cada nodo del grafo se compruebe que su color es distinto de todos sus vecinos (nodos conectados); si alguno falla rechaza y si para todos acaba satisfactoriamente acepta.
+
+Por tanto el problema COLOREAR3 está en NP.
 
 ### Reducción SAT3 a COLOREAR3
 Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, x_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
@@ -45,7 +53,7 @@ Veamos ahora que en una puerta OR si al menos uno de los nodos de entrada está 
 
 Por tanto si el tercer nodo literal está pintado de V entonces $n_{resClausula}$ está pintado de V (existe al menos una manera de que sea coloreable), y si alguno de los dos primeros nodos literales está pintado de V entonces el nodo resultado de la primera puerta $n_{res}$ estará pintado de V y por tanto aplicamos lo mismo y tendremos que $n_{resClausula}$ está pintado V.
 
-Así concluye la reducción, si encontramos una manera de colorear este grafo habremos resuelto el problema SAT3 sin más que tomar los nodos variables y ver el color asignado sabiendo que V es Verdadero y F es Falso.
+Así concluye la reducción, si encontramos una manera de colorear este grafo habremos resuelto el problema SAT3 sin más que tomar los nodos variables y ver el color asignado sabiendo que V es Verdadero y F es Falso. Por tanto como COLOREAR3 era NP y hemos encontrado una reducción de SATA3 a COLOREAR3 donde SATA3 está en NP-Completo entonces COLOREA3 está en NP-Completo.
 
 ## Implemetación de la reducción
 Implementamos la reducción SAT3 a COLOREAR3 que hemos usado, para ello tenemos que implementar varias clases:
