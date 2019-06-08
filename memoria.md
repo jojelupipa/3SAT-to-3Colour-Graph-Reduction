@@ -13,16 +13,16 @@ Dado un grafo G y una función $f:G \rightarrow \{C1, C2, C3\}$ que asigna a cad
 Para ver que es NP-Completo veremos que está en NP y después haremos una reducción del problema NP-Completo SAT3 a COLOREAR3.
 
 ### NP
-Vemos que está en NP viendo que podemos hacer una MTND que elija una forma de colorear el grafo de manera no determinista y compruebe si el grafo resultante cumple las condiciones (que cada par de nodos conectados tengan colores distintos).
+Vemos que está en NP comprobando que podemos hacer una MTND que elija una forma de colorear el grafo de manera no determinista y compruebe si el grafo resultante cumple las condiciones (que cada par de nodos conectados tengan colores distintos).
 
 La comprobación se puede hacer con un algoritmo simple que por cada nodo del grafo se compruebe que su color es distinto de todos sus vecinos (nodos conectados); si alguno falla rechaza y si para todos acaba satisfactoriamente acepta.
 
 Por tanto el problema COLOREAR3 está en NP.
 
 ### Reducción SAT3 a COLOREAR3
-Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, x_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
+Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, p_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
 
-Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
+Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quisiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
 
 Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
 
@@ -40,7 +40,7 @@ Entonces una cláusula se representa tomando los dos primeros literales que apar
 
 Como queremos que las cláusulas sean siempre verdad entonces conectamos en triángulo $n_{resClausula}$ con los nodos base Falso y Base; de manera que si se puede colorear el grafo obligamos a que $n_{resClausula}$ se tenga que pintar de V, y por tanto todas las cláusulas son verdad.
 
-Nos falta ver que si todas los literales de una cláusula se pintan con F entonces $n_{resClausula}$ debería pintarse con F (y por tanto el grafo no sería coloreable) y que si alguno de los literales se pinta con V entonces $n_{resClausula}$ se puede pintar con V (es decir, que el subgrafo de la cláusula es coloreable).
+Nos falta ver que si todos los literales de una cláusula se pintan con F entonces $n_{resClausula}$ debería pintarse con F (y por tanto el grafo no sería coloreable) y que si alguno de los literales se pinta con V entonces $n_{resClausula}$ se puede pintar con V (es decir, que el subgrafo de la cláusula es coloreable).
 
 Veamos que en una puerta OR si los nodos de entrada se pintan con F entonces el nodo resultado se debe pintar con F para que sea coloreable. Obviamente llamemos $u$, $v$ a los nodos entrada y supongamos que están pintados con F, como $u'$, $v'$ y $n_{res}$ forman un triángulo para que sea coloreable cada vertice debe estar pintado de un color diferente. Al estar conectado $v'$ con $v$ que tiene F entonces $v'$ puede pintarse con V ó B pero no F; e igual pasa con $u'$ con $u$ por lo que $n_{res}$ debe ser F ya que es el único que puede.
 
@@ -99,8 +99,8 @@ x or y or z
 
 Una vez leidas las variables y las cláusulas se las pasamos para crear un grafo nuevo, que lo hace con 3 etapas:
 
-1. `inicializar_grafo`: crea los 3 nodos base ("Base", "Verdad", "Falso") y crea un triangulo entre ellos.
-2. `crea_nodos_variables`: por cada variable crea un nodo con el nombre de la variable y otro con el nombre de la variable pero negado (por ejemplo "x" y "¬x") y finalmente crea un triangulo entre estos dos nuevos y el nodo "Base" (ninguno de los nodos variable tiene color aun).
+1. `inicializar_grafo`: crea los 3 nodos base ("Base", "Verdad", "Falso") y crea un triángulo entre ellos.
+2. `crea_nodos_variables`: por cada variable crea un nodo con el nombre de la variable y otro con el nombre de la variable pero negado (por ejemplo "x" y "¬x") y finalmente crea un triángulo entre estos dos nuevos y el nodo "Base" (ninguno de los nodos variable tiene color aún).
 3. `crea_nodos_puertas`: por cada cláusula toma los dos primeros literales (busca su nodo variable correspondiente) y les aplica la creación de una puerta OR (`crea_puerta_or`) que se encarga de hacer la estructura usada en la reducción y finalmente devuelve el último nodo (el resultado de la puerta); y después se vuelve a aplicar `crea_puerta_or` al resultado de la anterior puerta OR junto al tercer literal. Finalmente se hace el triángulo con el nodo resultado final y los nodos base "Falso" y "Base" para que se fuerce al que el color sea "Verdad". De todas formas ninguno de los nuevos nodos tiene color asignado (se deja a "").
 
 Por tanto ya tenemos creado un grafo que de ser coloreable con 3 colores entonces podemos responder al problema SAT3 del que venía (el resultado será el color - valor de verdad que toman los nodos variables).
@@ -110,7 +110,7 @@ Por tanto ya tenemos creado un grafo que de ser coloreable con 3 colores entonce
 ## Algoritmo de resolución
 Un algoritmo muy fácil de implementar (pero obviamente de tiempo exponencial y por tanto se sugiere utilizarlo con ejemplos sencillos) para resolver el coloreado con 3 colores de este grafo sería el siguiente:
 
-La idea básica es ver que nodos faltan por pintar, y darles un color cualquiera que esté disponible y ver si el subgrafo que nos queda es coloreable; si si es coloreable he acabado, si no es entonces volvemos a la elección de color y probamos con otro, si en algún momento no tenemos colores disponibles (porque no se podía o ya hemos probado y no era coloreable) entonces es que no se puede colorear. Finalmente como caso base, si el grafo no tiene nodos sin pintar es que es coloreable.
+La idea básica es ver que nodos faltan por pintar, y darles un color cualquiera que esté disponible y ver si el subgrafo que nos queda es coloreable; si es coloreable he acabado, si no es entonces volvemos a la elección de color y probamos con otro, si en algún momento no tenemos colores disponibles (porque no se podía o ya hemos probado y no era coloreable) entonces es que no se puede colorear. Finalmente como caso base, si el grafo no tiene nodos sin pintar es que es coloreable.
 
 Si el grafo es coloreable entonces la función devuelve True y el grafo queda coloreado; en caso contrario devuelve False y se quedan los nodos con color "".
 
