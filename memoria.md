@@ -1,3 +1,10 @@
+---
+header-includes:      	 	        	# Incluir paquetes en LaTeX
+	- \usepackage{textcomp}
+	- \usepackage{tkz-graph}
+	- \usetikzlibrary{arrows}
+---
+
 # Coloreado de grafo con 3 colores NP-Completo
 
 ### Miguel Lentisco Ballesteros
@@ -22,7 +29,48 @@ Por tanto el problema COLOREAR3 está en NP.
 ### Reducción SAT3 a COLOREAR3
 Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, p_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
 
+<!-- Imagen 1 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=1cm,LineWidth =1pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{B}
+		\SOWE(B){V}
+		\SOEA(B){F}
+		%% edges
+		\draw[-](B) -- (F);
+		\draw[-](V) -- (F);
+		\draw[-](B) -- (V);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
+
 Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quisiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
+
+<!-- Imagen 2 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=1.5cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{B}
+		\SOWE(B){x1}
+		\SOEA(B){¬x1}
+		\NOEA(B){x2}
+		\NOWE(B){¬x2}
+		%% edges
+		\draw[-](B) -- (x1);
+		\draw[-](B) -- (¬x1);
+		\draw[-](x1) -- (¬x1);
+		\draw[-](B) -- (x2);
+		\draw[-](B) -- (¬x2);
+		\draw[-](x2) -- (¬x2);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
 
 Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
 
@@ -36,17 +84,144 @@ Una puerta OR en grafo se construye de la siguiente manera:
 - $u'$ se conecta con $u$ y $v'$ se conecta con $v$.
 - A $n_{res}$ lo llamaremos el nodo resultado de la puerta OR.
 
+<!-- Imagen 3 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=1cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{u}
+		\EA(u){u'}
+		\SO(u){v}
+		\EA(v){v'}
+		\NOEA(v'){Nres}
+		%% edges
+		\draw[-](u) -- (u');
+		\draw[-](v) -- (v');
+		\draw[-](v') -- (u');
+		\draw[-](u') -- (Nres);
+		\draw[-](v') -- (Nres);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
+
 Entonces una cláusula se representa tomando los dos primeros literales que aparecen, se buscan los nodos variables de esos literales y se les aplica la construcción de la puerta OR. Al nodo resultado de esa puerta OR y al nodo variable del tercer literal de la cláusula se le vuelve a aplicar la construcción de la puerta OR. Finalmente al nodo resultado de esa puerta OR lo llamaremos $n_{resClausula}$ que simula el resultado de la cláusula.
+
+<!-- Imagen 4 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=1cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{u}
+		\EA(u){u'}
+		\SO(u){v}
+		\EA(v){v'}
+		\EA(v'){Nres}
+		\SO(v){w}
+		\SOEA(v'){w'}
+		\EA(Nres){Nres'}
+		\EA(Nres'){NresC}
+		\NO(NresC){B}
+		\NOEA(NresC){F}
+		%% edges
+		\draw[-](u) -- (u');
+		\draw[-](v) -- (v');
+		\draw[-](v') -- (u');
+		\draw[-](u') -- (Nres);
+		\draw[-](v') -- (Nres);
+		\draw[-](w) -- (w');
+		\draw[-](w') -- (Nres');
+		\draw[-](Nres) -- (Nres');
+		\draw[-](w') -- (Nres);
+		\draw[-](Nres') -- (NresC);
+		\draw[-](NresC) -- (F);
+		\draw[-](NresC) -- (B);
+		\draw[-](B) -- (F);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
+*Donde B estaría conectada con cada una de las variables u,w,v*
+
+
 
 Como queremos que las cláusulas sean siempre verdad entonces conectamos en triángulo $n_{resClausula}$ con los nodos base Falso y Base; de manera que si se puede colorear el grafo obligamos a que $n_{resClausula}$ se tenga que pintar de V, y por tanto todas las cláusulas son verdad.
 
 Nos falta ver que si todos los literales de una cláusula se pintan con F entonces $n_{resClausula}$ debería pintarse con F (y por tanto el grafo no sería coloreable) y que si alguno de los literales se pinta con V entonces $n_{resClausula}$ se puede pintar con V (es decir, que el subgrafo de la cláusula es coloreable).
+
+<!-- Imagen 5 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=1.5cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{u=F}
+		\EA(u=F){u'}
+		\SO(u=F){v=F}
+		\EA(v=F){v'}
+		\NOEA(v'){F}
+		%% edges
+		\draw[-](u=F) -- (u');
+		\draw[-](v=F) -- (v');
+		\draw[-](v') -- (u');
+		\draw[-](u') -- (F);
+		\draw[-](v') -- (F);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
 
 Veamos que en una puerta OR si los nodos de entrada se pintan con F entonces el nodo resultado se debe pintar con F para que sea coloreable. Obviamente llamemos $u$, $v$ a los nodos entrada y supongamos que están pintados con F, como $u'$, $v'$ y $n_{res}$ forman un triángulo para que sea coloreable cada vertice debe estar pintado de un color diferente. Al estar conectado $v'$ con $v$ que tiene F entonces $v'$ puede pintarse con V ó B pero no F; e igual pasa con $u'$ con $u$ por lo que $n_{res}$ debe ser F ya que es el único que puede.
 
 Por tanto al aplicar la puerta OR sobre los literales $x_1$, $x_2$ suponiendo que están pintados de F, el resultado se pinta de F y como el literal $x_3$ también está pintado de F aplicar la puerta OR sobre estos dos nos dice que $n_{resClausula}$ debe estar pintado de F pero está conectado con el nodo Falso pintado de F. Concluimos que entonces el grafo no es coloreable.
 
 Veamos ahora que en una puerta OR si al menos uno de los nodos de entrada está pintado de V entonces existe una manera de colorear los nodos de la puerta de manera que el nodo resultado esté pintado de V.
+
+<!-- Imagen 7 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{4}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=2cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{u=V}
+		\EA(u=V){u'=F}
+		\SO(u=F){v=V/F}
+		\EA(v=V/F){v'=B}
+		\EA(v'){V}
+		%% edges
+		\draw[-](u=V) -- (u'=F);
+		\draw[-](v=V/F) -- (v'=B);
+		\draw[-](v'=B) -- (u'=F);
+		\draw[-](u'=F) -- (V);
+		\draw[-](v'=B) -- (V);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
+
+<!-- Imagen 8 -->
+\begin{center}
+	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
+		\SetGraphUnit{4}
+		\GraphInit[vstyle=Normal] 
+		\SetVertexNormal[Shape=circle,MinSize=2cm,LineWidth =1.2pt]
+		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
+		\Vertex{u=V}
+		\EA(u=V){u'=B}
+		\SO(u=F){v=B}
+		\EA(v=B){v'=F}
+		\EA(v'){V}
+		%% edges
+		\draw[-](u=V) -- (u'=B);
+		\draw[-](v=B) -- (v'=F);
+		\draw[-](v'=F) -- (u'=B);
+		\draw[-](u'=B) -- (V);
+		\draw[-](v'=F) -- (V);
+	\end{tikzpicture}
+\end{center}
+<!-- -->
 
 - Suponemos nodos de entrada $u$, $v$ donde $u$ está pintado de V y $v$ de V o F, queremos que $n_{res}$ tenga color V, por tanto $u'$ y $v'$ deben tomar B y F, sin más que pintando $u'$ de F ya que $u$ tiene V se puede y pintando $v'$ de B dando igual lo que tenga $v$ (F o V).
 - Ahora si $v$ tuviera B entonces ponemos $v'$ de F y $u'$ de B y seguiría siendo consistente.
