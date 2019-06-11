@@ -1,4 +1,4 @@
----
+-------------------------------------------------------------------------------
 header-includes:      	 	        	# Incluir paquetes en LaTeX
 	- \usepackage{textcomp}
 	- \usepackage{tkz-graph}
@@ -14,7 +14,9 @@ header-includes:      	 	        	# Incluir paquetes en LaTeX
 El problema de colorear un grafo con 3 colores (COLOREAR3) consiste en:
 
 Dado un grafo G y una función $f:G \rightarrow \{C1, C2, C3\}$ que asigna a cada nodo n de G un color de los 3 $\{C1, C2, C3\}$ entonces un grafo es coloreable con 3 colores si:
+
 - Cada nodo n de G tiene un color asignado
+
 - Para cada par de nodos conectados $(u,v)$ de G entonces $f(u) \neq f(v)$ (tienen colores distintos).
 
 Para ver que es NP-Completo veremos que está en NP y después haremos una reducción del problema NP-Completo SAT3 a COLOREAR3.
@@ -96,7 +98,7 @@ Veamos que en una puerta OR si los nodos de entrada se pintan con F entonces el 
 Por tanto al aplicar la puerta OR sobre los literales $x_1$, $x_2$ suponiendo que están pintados de F, el resultado se pinta de F y como el literal $x_3$ también está pintado de F aplicar la puerta OR sobre estos dos nos dice que $n_{resClausula}$ debe estar pintado de F pero está conectado con el nodo Falso pintado de F. Concluimos que entonces el grafo no es coloreable.
 
 <!-- Imagen 6 -->
-![](./img/im_6.png)
+![](./img/im_6.pdf)
 <!-- -->
 
 Veamos ahora que en una puerta OR si al menos uno de los nodos de entrada está pintado de V entonces existe una manera de colorear los nodos de la puerta de manera que el nodo resultado esté pintado de V.
@@ -115,7 +117,7 @@ Veamos ahora que en una puerta OR si al menos uno de los nodos de entrada está 
 Por tanto si el tercer nodo literal está pintado de V entonces $n_{resClausula}$ está pintado de V (existe al menos una manera de que sea coloreable), y si alguno de los dos primeros nodos literales está pintado de V entonces el nodo resultado de la primera puerta $n_{res}$ estará pintado de V y por tanto aplicamos lo mismo y tendremos que $n_{resClausula}$ está pintado V.
 
 <!-- Imagen 9 -->
-![](./img/im_9.png)
+![](./img/im_9.pdf)
 <!-- -->
 
 Así concluye la reducción, si encontramos una manera de colorear este grafo habremos resuelto el problema SAT3 sin más que tomar los nodos variables y ver el color asignado sabiendo que V es Verdadero y F es Falso. Por tanto como COLOREAR3 era NP y hemos encontrado una reducción de SATA3 a COLOREAR3 donde SATA3 está en NP-Completo entonces COLOREA3 está en NP-Completo.
