@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------
+---
 header-includes:      	 	        	# Incluir paquetes en LaTeX
 	- \usepackage{textcomp}
 	- \usepackage{tkz-graph}
