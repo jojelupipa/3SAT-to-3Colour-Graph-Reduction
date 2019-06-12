@@ -31,17 +31,17 @@ Por tanto el problema COLOREAR3 está en NP.
 ### Reducción SAT3 a COLOREAR3
 Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, p_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
 
+
+Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quisiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
+
 <!-- Imagen 1 -->
 ![](./img/im_1.pdf)
 <!-- -->
-
-Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quisiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
+Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
 
 <!-- Imagen 2 -->
 ![](./img/im_2.pdf)
 <!-- -->
-
-Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
 
 Ya tenemos la manera de que si el grafo es coloreable entonces se le asignaran colores (valores de verdad) correctos a nuestros nodos variable (variables), ahora tenemos que asegurar que si es coloreable entonces cada cláusula es verdad: es decir, para cada claúsula uno de los 3 nodos variable que aparecen en la cláusula debe estar pintado con V (Verdad); si todos los nodos variable de la cláusula se pintaran con F entonces el grafo debe ser no coloreable.
 
@@ -75,13 +75,13 @@ Una puerta OR en grafo se construye de la siguiente manera:
 \end{center}
 <!-- -->
 
-Entonces una cláusula se representa tomando los dos primeros literales que aparecen, se buscan los nodos variables de esos literales y se les aplica la construcción de la puerta OR. Al nodo resultado de esa puerta OR y al nodo variable del tercer literal de la cláusula se le vuelve a aplicar la construcción de la puerta OR. Finalmente al nodo resultado de esa puerta OR lo llamaremos $n_{resClausula}$ que simula el resultado de la cláusula.
+Entonces una cláusula se representa tomando los dos primeros literales que aparecen, se buscan los nodos variables de esos literales y se les aplica la construcción de la puerta OR. Al nodo resultado de esa puerta OR y al nodo variable del tercer literal de la cláusula se le vuelve a aplicar la construcción de la puerta OR. Finalmente al nodo resultado de esa puerta OR lo llamaremos $n_{resClausula}$ $(N_{resC})$ que simula el resultado de la cláusula.
 
 <!-- Imagen 4 -->
 ![](./img/im_4.pdf)
 <!-- -->
 
-*Donde B estaría conectada con cada una de las variables u,w,v*
+*Donde B (en amarillo) estaría conectada con cada una de las variables u,w,v*
 
 
 
@@ -89,11 +89,12 @@ Como queremos que las cláusulas sean siempre verdad entonces conectamos en tri�
 
 Nos falta ver que si todos los literales de una cláusula se pintan con F entonces $n_{resClausula}$ debería pintarse con F (y por tanto el grafo no sería coloreable) y que si alguno de los literales se pinta con V entonces $n_{resClausula}$ se puede pintar con V (es decir, que el subgrafo de la cláusula es coloreable).
 
+
+Veamos que en una puerta OR si los nodos de entrada se pintan con F entonces el nodo resultado se debe pintar con F para que sea coloreable. Obviamente llamemos $u$, $v$ a los nodos entrada y supongamos que están pintados con F, como $u'$, $v'$ y $n_{res}$ forman un triángulo para que sea coloreable cada vertice debe estar pintado de un color diferente. Al estar conectado $v'$ con $v$ que tiene F entonces $v'$ puede pintarse con V ó B pero no F; e igual pasa con $u'$ con $u$ por lo que $n_{res}$ debe ser F ya que es el único que puede.
+
 <!-- Imagen 5 -->
 ![](./img/im_5.pdf)
 <!-- -->
-
-Veamos que en una puerta OR si los nodos de entrada se pintan con F entonces el nodo resultado se debe pintar con F para que sea coloreable. Obviamente llamemos $u$, $v$ a los nodos entrada y supongamos que están pintados con F, como $u'$, $v'$ y $n_{res}$ forman un triángulo para que sea coloreable cada vertice debe estar pintado de un color diferente. Al estar conectado $v'$ con $v$ que tiene F entonces $v'$ puede pintarse con V ó B pero no F; e igual pasa con $u'$ con $u$ por lo que $n_{res}$ debe ser F ya que es el único que puede.
 
 Por tanto al aplicar la puerta OR sobre los literales $x_1$, $x_2$ suponiendo que están pintados de F, el resultado se pinta de F y como el literal $x_3$ también está pintado de F aplicar la puerta OR sobre estos dos nos dice que $n_{resClausula}$ debe estar pintado de F pero está conectado con el nodo Falso pintado de F. Concluimos que entonces el grafo no es coloreable.
 
@@ -103,16 +104,17 @@ Por tanto al aplicar la puerta OR sobre los literales $x_1$, $x_2$ suponiendo qu
 
 Veamos ahora que en una puerta OR si al menos uno de los nodos de entrada está pintado de V entonces existe una manera de colorear los nodos de la puerta de manera que el nodo resultado esté pintado de V.
 
+- Suponemos nodos de entrada $u$, $v$ donde $u$ está pintado de V y $v$ de V o F, queremos que $n_{res}$ tenga color V, por tanto $u'$ y $v'$ deben tomar B y F, sin más que pintando $u'$ de F ya que $u$ tiene V se puede y pintando $v'$ de B dando igual lo que tenga $v$ (F o V).
+
 <!-- Imagen 7 -->
 ![](./img/im_7.pdf)
 <!-- -->
 
+- Ahora si $v$ tuviera B entonces ponemos $v'$ de F y $u'$ de B y seguiría siendo consistente.
+
 <!-- Imagen 8 -->
 ![](./img/im_8.pdf)
 <!-- -->
-
-- Suponemos nodos de entrada $u$, $v$ donde $u$ está pintado de V y $v$ de V o F, queremos que $n_{res}$ tenga color V, por tanto $u'$ y $v'$ deben tomar B y F, sin más que pintando $u'$ de F ya que $u$ tiene V se puede y pintando $v'$ de B dando igual lo que tenga $v$ (F o V).
-- Ahora si $v$ tuviera B entonces ponemos $v'$ de F y $u'$ de B y seguiría siendo consistente.
 
 Por tanto si el tercer nodo literal está pintado de V entonces $n_{resClausula}$ está pintado de V (existe al menos una manera de que sea coloreable), y si alguno de los dos primeros nodos literales está pintado de V entonces el nodo resultado de la primera puerta $n_{res}$ estará pintado de V y por tanto aplicamos lo mismo y tendremos que $n_{resClausula}$ está pintado V.
 
