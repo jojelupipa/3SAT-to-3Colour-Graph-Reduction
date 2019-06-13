@@ -19,7 +19,7 @@ Dado un grafo G y una función $f:G \rightarrow \{C1, C2, C3\}$ que asigna a cad
 
 - Para cada par de nodos conectados $(u,v)$ de G entonces $f(u) \neq f(v)$ (tienen colores distintos).
 
-Para ver que es NP-Completo veremos que está en NP y después haremos una reducción del problema NP-Completo SAT3 a COLOREAR3.
+Para ver que es NP-Completo veremos que está en NP y después haremos una reducción del problema NP-Completo 3SAT a COLOREAR3.
 
 ### NP
 Vemos que está en NP comprobando que podemos hacer una MTND que elija una forma de colorear el grafo de manera no determinista y compruebe si el grafo resultante cumple las condiciones (que cada par de nodos conectados tengan colores distintos).
@@ -28,8 +28,8 @@ La comprobación se puede hacer con un algoritmo simple que por cada nodo del gr
 
 Por tanto el problema COLOREAR3 está en NP.
 
-### Reducción SAT3 a COLOREAR3
-Sabemos que SAT3 consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, p_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
+### Reducción 3SAT a COLOREAR3
+Sabemos que 3SAT (versión cláusulas con 3 literales distintos) consiste en ver si dado un conjunto de símbolos proposicionales (variables) $U = \{p_1, \ldots, p_n\}$ y la colección de cláusulas $C$ donde cada cláusula tiene 3 literales (es decir, de la forma $x_1 \vee x_2 \vee x_3$); entonces ver si C es satisfacible (es decir, que cada cláusula de $C$ sea verdad asignando a cada $p_i$ un valor de verdad - V o F). Por tanto tendremos que encontrar una combinación de valores para cada $p_i$ de manera que al menos un literal de cada cláusula de $C$ sea V.
 
 
 Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 colores sean $\{ V, F, B\}$ que representan respectivamente Verdadero, Falso y Base (este último color es cualquier otro, servirá como apoyo). Y al colorear tendremos que ponerles a nuestras variables un color V o F; por tanto tendremos que crear nodos que representen estas variables y además forzar que si se quisiera colorear el grafo entonces a los nodos de las variables solo puedan darles V o F. Por otro lado en las cláusulas aparecen las variables tal cual o negadas, por lo que también deberian de aparecer como nodos, junto a la misma condición de las variables sin negar.
@@ -37,7 +37,7 @@ Tendremos que saber si las variables son V o F, así que diremos que nuestros 3 
 <!-- Imagen 1 -->
 ![](./img/im_1.pdf)
 <!-- -->
-Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
+Todo esto nos indica que por cada variable de 3SAT crearemos dos nodos: un nodo con la variable y otro con la variable negada; finalmente formamos un triangulo conenctandolas con el nodo "Base" de esta manera nos aseguramos que al colorear las variables y las negaciones solo puedan tener el valor F o V y además si una toma un valor (V/F) entonces la negación debe tomar la contraria forzosamente (F/V).
 
 <!-- Imagen 2 -->
 ![](./img/im_2.pdf)
@@ -45,7 +45,7 @@ Todo esto nos indica que por cada variable de SAT3 crearemos dos nodos: un nodo 
 
 Ya tenemos la manera de que si el grafo es coloreable entonces se le asignaran colores (valores de verdad) correctos a nuestros nodos variable (variables), ahora tenemos que asegurar que si es coloreable entonces cada cláusula es verdad: es decir, para cada claúsula uno de los 3 nodos variable que aparecen en la cláusula debe estar pintado con V (Verdad); si todos los nodos variable de la cláusula se pintaran con F entonces el grafo debe ser no coloreable.
 
-Para implementar esto último nos servimos de la propia logica de SAT3 donde las cláusulas se implementan con OR ($\vee$), así que haremos una versión de puerta OR en grafos de manera que se cumpla lo que hemos dicho arriba.
+Para implementar esto último nos servimos de la propia logica de 3SAT donde las cláusulas se implementan con OR ($\vee$), así que haremos una versión de puerta OR en grafos de manera que se cumpla lo que hemos dicho arriba.
 
 Una puerta OR en grafo se construye de la siguiente manera:
 - Dados dos nodos $u$, $v$ del grafo se crean 3 nodos adicionales $u'$, $v'$ y $n_{res}$
@@ -57,7 +57,7 @@ Una puerta OR en grafo se construye de la siguiente manera:
 \begin{center}
 	\begin{tikzpicture}[->,>=stealth',shorten >=1pt,thick]
 		\SetGraphUnit{2}
-		\GraphInit[vstyle=Normal] 
+		\GraphInit[vstyle=Normal]
 		\SetVertexNormal[Shape=circle,MinSize=1.5cm,LineWidth =1.2pt]
 		\tikzset{VertexStyle/.append style = {font=\Large\bfseries},thick}
 		\Vertex{u}
@@ -122,12 +122,12 @@ Por tanto si el tercer nodo literal está pintado de V entonces $n_{resClausula}
 ![](./img/im_9.pdf)
 <!-- -->
 
-Así concluye la reducción, si encontramos una manera de colorear este grafo habremos resuelto el problema SAT3 sin más que tomar los nodos variables y ver el color asignado sabiendo que V es Verdadero y F es Falso. Por tanto como COLOREAR3 era NP y hemos encontrado una reducción de SATA3 a COLOREAR3 donde SATA3 está en NP-Completo entonces COLOREA3 está en NP-Completo.
+Así concluye la reducción, si encontramos una manera de colorear este grafo habremos resuelto el problema 3SAT sin más que tomar los nodos variables y ver el color asignado sabiendo que V es Verdadero y F es Falso; y si encontramos una asignación para las variables de manera que se satisfacen todas las cláusulas pintamos los nodos variable con esa asignación y como las cláusulas son satisfacibles en cada cláusula se tendrá un literal pintado de V y sabemos entonces que existe una manera de colorear el subgrafo de la cláusula; y por tanto el grafo será coloreable. Por tanto como COLOREAR3 era NP y hemos encontrado una reducción de SATA3 a COLOREAR3 donde 3SAT está en NP-Completo entonces COLOREA3 está en NP-Completo.
 
 ## Implemetación de la reducción
-Implementamos la reducción SAT3 a COLOREAR3 que hemos usado, para ello tenemos que implementar varias clases:
+Implementamos la reducción 3SAT a COLOREAR3 que hemos usado, para ello tenemos que implementar varias clases:
 
-**Clausula**: representa una cláusula de SAT3, como son del estilo `x1 OR x2 OR x3` simplemente guardamos los 3 literales como strings. Es decir:
+**Clausula**: representa una cláusula de 3SAT, como son del estilo `x1 OR x2 OR x3` simplemente guardamos los 3 literales como strings. Es decir:
 
 ```python
 class Clausula:
@@ -145,12 +145,12 @@ class Nodo:
   color # Color (string)
 ```
 
-**Grafo**: finalmente guardamos la estructura del grafo que tendrá los nodos (divididos por comodidad a la hora de programar en 3 listas: nodos_base que representan los 3 nodos principales, V,F,B; los nodos_variable que son los nodos que representan las variables y su negación; y finalmente los nodos_puertas que son los nodos auxiliares implementados para hacer las puertas OR en el grafo) y la lista de cláusulas y de variables que provienen de SAT3.
+**Grafo**: finalmente guardamos la estructura del grafo que tendrá los nodos (divididos por comodidad a la hora de programar en 3 listas: nodos_base que representan los 3 nodos principales, V,F,B; los nodos_variable que son los nodos que representan las variables y su negación; y finalmente los nodos_puertas que son los nodos auxiliares implementados para hacer las puertas OR en el grafo) y la lista de cláusulas y de variables que provienen de 3SAT.
 
 ```python
 class Grafo:
-  variables # Las variables de SAT3 (lista de string)
-  clausulas # Las cláusulas de SAT3 (lista de Clausula)
+  variables # Las variables de 3SAT (lista de string)
+  clausulas # Las cláusulas de 3SAT (lista de Clausula)
   nodos_base # Nodos base (lista de Nodo)
   nodos_variable # Nodos de variables (lista de Nodo)
   nodos_puertas # Nodos de puertas (lista de Nodo)
@@ -172,7 +172,7 @@ Una vez leidas las variables y las cláusulas se las pasamos para crear un grafo
 2. `crea_nodos_variables`: por cada variable crea un nodo con el nombre de la variable y otro con el nombre de la variable pero negado (por ejemplo "x" y "¬x") y finalmente crea un triángulo entre estos dos nuevos y el nodo "Base" (ninguno de los nodos variable tiene color aún).
 3. `crea_nodos_puertas`: por cada cláusula toma los dos primeros literales (busca su nodo variable correspondiente) y les aplica la creación de una puerta OR (`crea_puerta_or`) que se encarga de hacer la estructura usada en la reducción y finalmente devuelve el último nodo (el resultado de la puerta); y después se vuelve a aplicar `crea_puerta_or` al resultado de la anterior puerta OR junto al tercer literal. Finalmente se hace el triángulo con el nodo resultado final y los nodos base "Falso" y "Base" para que se fuerce al que el color sea "Verdad". De todas formas ninguno de los nuevos nodos tiene color asignado (se deja a "").
 
-Por tanto ya tenemos creado un grafo que de ser coloreable con 3 colores entonces podemos responder al problema SAT3 del que venía (el resultado será el color - valor de verdad que toman los nodos variables).
+Por tanto ya tenemos creado un grafo que de ser coloreable con 3 colores entonces podemos responder al problema 3SAT del que venía (el resultado será el color - valor de verdad que toman los nodos variables).
 
 **Nota**: la implementación es muy simple por lo que hemos decidido solo explicarla.
 
@@ -210,19 +210,19 @@ def colorea_grafo(nodos):
     return False
 ```
 
-## Transformación de la solución en SAT3
-Una llamada a `to_sat3` nos imprime por pantalla en caso de que el grafo sea coloreable, los valores de verdad que deben de tomar las variables para poder resolver el problema SAT3; tomando en cuenta que solo hay que ver los colores de los nodos variable:
+## Transformación de la solución en 3SAT
+Una llamada a `to_3SAT` nos imprime por pantalla en caso de que el grafo sea coloreable, los valores de verdad que deben de tomar las variables para poder resolver el problema 3SAT; tomando en cuenta que solo hay que ver los colores de los nodos variable:
 
 ```python
-def to_sat3(self):
+def to_3SAT(self):
     es_resoluble = self.alg_colorear_3_colores()
     msg = ""
     if es_resoluble:
-        msg = "Resolución SAT3, valores de verdad:"
+        msg = "Resolución 3SAT, valores de verdad:"
         for i in range(0, len(self.nodos_variable), 2):
             msg = msg + "\n" + self.nodos_variable[i].nombre + " = " + self.nodos_variable[i].color
     else:
-        msg = "No se puede resolver el problema SAT3/Colorear el grafo con 3 colores."
+        msg = "No se puede resolver el problema 3SAT/Colorear el grafo con 3 colores."
     return msg
 ```
 
@@ -237,11 +237,11 @@ x or y or z
 
 Nos devuelve por pantalla:
 ```text
-Resolución SAT3, valores de verdad:
+Resolución 3SAT, valores de verdad:
 x = F
 y = F
 z = V
 ```
-Que efectivamente resuelve SAT3.
+Que efectivamente resuelve 3SAT.
 
 **Nota**: también se imprime por pantalla el "grafo" (se imprimen la información de cada nodo: nombre, lista de nombres de nodos conectados y su color).
